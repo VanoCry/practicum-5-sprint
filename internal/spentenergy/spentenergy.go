@@ -1,7 +1,14 @@
 package spentenergy
 
 import (
+	"fmt"
+	"log"
 	"time"
+)
+
+// Custom errors
+var (
+	DataBelowZero = fmt.Errorf("data below zero")
 )
 
 // Основные константы, необходимые для расчетов.
@@ -13,17 +20,40 @@ const (
 )
 
 func WalkingSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
-	// TODO: реализовать функцию
+	if steps <= 0 || weight <= 0 || height <= 0 || duration <= 0 {
+		log.Println(DataBelowZero)
+		return 0, fmt.Errorf("Invalid data for WalkingSpentCalories: %w", DataBelowZero)
+	}
+	meanSpeed := MeanSpeed(steps, height, duration)
+	caloriesWalking := ((weight * meanSpeed * duration.Minutes()) / minInH) * walkingCaloriesCoefficient
+	return caloriesWalking, nil
 }
 
 func RunningSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
-	// TODO: реализовать функцию
+	if steps <= 0 || weight <= 0 || height <= 0 || duration <= 0 {
+		log.Println(DataBelowZero)
+		return 0, fmt.Errorf("Invalid data for RunningSpentCalories: %w", DataBelowZero)
+	}
+	meanSpeed := MeanSpeed(steps, height, duration)
+	calories := (weight * meanSpeed * duration.Minutes()) / minInH
+	return calories, nil
 }
 
 func MeanSpeed(steps int, height float64, duration time.Duration) float64 {
-	// TODO: реализовать функцию
+	if steps <= 0 || height <= 0 || duration <= 0 {
+		log.Println(DataBelowZero)
+		return 0
+	}
+	distance := Distance(steps, height)
+	return distance / duration.Hours()
 }
 
 func Distance(steps int, height float64) float64 {
-	// TODO: реализовать функцию
+	if steps <= 0 || height <= 0 {
+		log.Println(DataBelowZero)
+		return 0
+	}
+	stepLength := height * stepLengthCoefficient
+	distance := (float64(steps) * stepLength) / mInKm
+	return distance
 }
