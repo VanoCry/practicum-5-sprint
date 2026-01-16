@@ -83,7 +83,7 @@ func (t Training) ActionInfo() (string, error) {
 		return "", fmt.Errorf("Invalid activity data for ActionInfo: %w", ErrInvalidActivityType)
 	}
 	dataString := fmt.Sprintf("Тип тренировки: %s\nДлительность: %.2f ч.\nДистанция: %.2f км.\nСкорость: %.2f км/ч\nСожгли калорий: %.2f\n",
-		t.TrainingType, t.Duration, distance, meanSpeed, calories)
+		t.TrainingType, t.Duration.Hours(), distance, meanSpeed, calories)
 	return dataString, nil
 
 }
